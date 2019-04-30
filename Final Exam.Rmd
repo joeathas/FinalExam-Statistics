@@ -19,8 +19,30 @@ You do not need to submit any work with these questions.  Just answer them in D2
 You're going to analyze the data in BirdPecks.rda and answer the questions in D2l.  Put all of your R in the chunk below:
 
 ```{r}
+load("BirdPecks.rda")
+boxplot(pecks~group , data = BirdPecks)
+
+group1<-BirdPecks$pecks[BirdPecks$group=="1"]
+group2<-BirdPecks$pecks[BirdPecks$group=="2"]
+
+sd(group1)
+sd(group2)
+
+hist(group1,xlab="Number of Pecks",ylab="Frequency",main="Number of Pecks for Group 1")
+hist(group2,xlab="Number of Pecks",ylab="Frequency",main="Number of Pecks for Group 2")
+
+#test for normality
+shapiro.test(group1)
+shapiro.test(group2)
+#both reject null hypothesis that distribution is normally distributed
+
+#Problem 1 - Part D
+wilcox.test(pecks~group,data=BirdPecks,conf.level=.9,conf.int=T)
+
+
 
 ```
+
 
 ---
 
@@ -29,8 +51,33 @@ You're going to analyze the data in BirdPecks.rda and answer the questions in D2
 Analyze StrengthSpeed.rda and put your R below:
 
 ```{r}
+load("StrengthSpeed.rda")
+boxplot(StrengthSpeed$before)
+boxplot(StrengthSpeed$after)
+
+differences<-StrengthSpeed$before-StrengthSpeed$after
+boxplot(differences)
+hist(differences)
+#test numerically, not just visually
+shapiro.test(differences)
+
+
 
 ```
+$\mu_d$ is mean differences between groups. 
+$$H_0: \mu_d = 0$$ 
+
+$$H_a: \mu_d > 0$$
+
+
+#Use R to conduct an appropriate hypothesis test to determine if strength training tends to increase speed in the target population. Use a 5% level of significance.
+
+#and state the following: null and alternative hypotheses  test statistic  conclusion.
+```{r}
+t.test(StrengthSpeed$before,StrengthSpeed$after,alternative = "greater",paired=TRUE)
+
+```
+Here we reject the null hypothesis that there is no difference in means and accept the alternative that weight training does increase speed. (t = 9.6083, df = 34, p-value = 1.606e-11). 
 
 ---
 
@@ -39,7 +86,28 @@ Analyze StrengthSpeed.rda and put your R below:
 Analyze GroupHLT scores and put your R here:
 
 ```{r}
+win<-c(79, 76, 74, 70, 81, 85, 73, 78, 69, 72, 83, 89, 72, 79, 75)
 
+loss<-c(78, 96, 85, 91, 77,103, 72, 93, 98, 86, 70, 110, 70, 91, 99)
+
+#examining the data
+boxplot(win);boxplot(loss)
+hist(win);hist(loss)
+shapiro.test(win);shapiro.test(loss )
+
+
+mean(loss);mean(win)
+t.test(win,loss)
+
+t.test(loss)
+
+library(boot)
+bootMean<-function(x,i){
+  mean(x[i])
+}
+#set seed to any integer value to preserve random number generation
+set.seed(1);boot.object<-boot(loss,bootMean,R=5000)
+boot.ci(boot.object,conf = .95)
 ```
 
 ---
@@ -49,6 +117,7 @@ Analyze GroupHLT scores and put your R here:
 Analyze the data in treadware.rda and put your R here:
 
 ```{r}
+load("treadwear.rda")
 
 ```
 
@@ -59,7 +128,7 @@ Analyze the data in treadware.rda and put your R here:
 Analyze the data in diamond.rda and include your R here:
 
 ```{r}
-
+load("diamond.rda")
 ```
 
 ---
@@ -69,7 +138,7 @@ Analyze the data in diamond.rda and include your R here:
 Analyze the data in Shells.rda and include your R here:
 
 ```{r}
-
+load("Shells.rda")
 ```
 
 ---
@@ -89,7 +158,7 @@ Analyze the "Primary News Source for Americans" data described in the problem st
 Analyze the data in cheese.rda and put your R below:
 
 ```{r}
-
+load("cheese.rda")
 ```
 
 ---
@@ -99,7 +168,7 @@ Analyze the data in cheese.rda and put your R below:
 Analyze the data in careerbarrier.rda and put your R below:
 
 ```{r}
-
+load("careerbarrier.rda")
 ```
 
 ---
@@ -109,7 +178,6 @@ Analyze the data in careerbarrier.rda and put your R below:
 Analyze the data on seat postion vs. nausea described in the problem.  Put your R below:
 
 ```{r}
-
 ```
 
 ---
